@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
@@ -12,8 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float coyoteTime = 0.1f;
     [SerializeField] float jumpBuffer = 0.12f;
 
-
-    // Groun check
+    // Ground check
     [SerializeField] Transform feet;
     [SerializeField] float checkRadius = 0.2f;
     [SerializeField] LayerMask groundMask;
@@ -24,7 +24,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float squashDuration = 0.25f;
 
     Rigidbody rb;
+    Transform cam;
     Vector3 move;
+    Vector3 flatForward, flatRight; // Stored for Vector3.Dot and Gizmos
+    float moveAway, moveRight;      // Dot product values
+    
     bool isGrounded, wasGrounded, jumpQueued;
     float lastGroundedTime = -1f, lastPressedTime = -1f;
     float airTime;
@@ -35,6 +39,9 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        if (Camera.main != null)
+            cam = Camera.main.transform;
     }
 
     void Update()
@@ -44,7 +51,33 @@ public class PlayerController : MonoBehaviour
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        move = Vector3.ClampMagnitude(new Vector3(h, 0f, v), 1f);
+
+        if (cam != null)
+        {
+            flatForward = cam.forward;
+            flatForward.y = 0f;
+            flatForward.Normalize();
+
+            flatRight = cam.right;
+            flatRight.y = 0f;
+            flatRight.Normalize();
+
+            move = Vector3.ClampMagnitude(flatRight * h + flatForward * v, 1f);
+
+            // Vector3.Dot calculations:
+            // Positive = moving away (W), Negative = moving toward (S)
+            moveAway = Vector3.Dot(move, flatForward);
+            // Positive = moving right (D), Negative = moving left (A)
+            moveRight = Vector3.Dot(move, flatRight);
+        }
+        else
+        {
+            move = Vector3.ClampMagnitude(new Vector3(h, 0f, v), 1f);
+            flatForward = Vector3.forward;
+            flatRight = Vector3.right;
+            moveAway = v;
+            moveRight = h;
+        }
 
         if (isGrounded && !jumpQueued && rb.linearVelocity.y <= 0f)
             lastGroundedTime = Time.time;
@@ -115,5 +148,13 @@ public class PlayerController : MonoBehaviour
         if (feet == null) return;
         Gizmos.color = isGrounded ? Color.green : Color.red;
         Gizmos.DrawWireSphere(feet.position, checkRadius);
+
+        // Optional Gizmo to visualize the Dot product direction lines from the player
+        if (Application.isPlaying)
+        {
+            // Draw forward/away direction line (Green if positive/away, Red if negative/toward)
+            Gizmos.color = moveAway >= 0f ? Color.green : Color.red;
+            Gizmos.DrawRay(transform.position + Vector3.up, flatForward * moveAway * 2f);
+        }
     }
 }
