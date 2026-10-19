@@ -190,11 +190,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   speed: 5
   jumpHeight: 1.8
+  fallMultiplier: 2.2
+  coyoteTime: 0.1
+  jumpBuffer: 0.12
   feet: {fileID: 974700611615924267}
   checkRadius: 0.2
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  body: {fileID: 6356732603252931628}
+  squashY: 0.7
+  squashDuration: 0.25
 --- !u!1 &6503815285283807683
 GameObject:
   m_ObjectHideFlags: 0

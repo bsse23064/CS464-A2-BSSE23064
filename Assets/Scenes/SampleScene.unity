@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 83282566}
   - component: {fileID: 83282565}
   - component: {fileID: 83282564}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1023,8 +1023,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: -0.25176364, y: -0.67235094, z: 0.2625685, w: -0.6446838}
+  m_LocalPosition: {x: -28.874115, y: 21.012775, z: 14.224002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4339,6 +4339,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2654615597692930830, guid: 5ca7dda1109f7954f8f302fbd5dc0bf6, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 868020bce17df474eb980ebbaad9f84b, type: 2}
     - target: {fileID: 2920027433735170039, guid: 5ca7dda1109f7954f8f302fbd5dc0bf6, type: 3}
       propertyPath: m_Name
       value: Player
